@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "administrators": [
+      {
+        "id": "1",
+        "name": "Admin",
+        "whatsappNumber": "+5511999999999"
+      }
+    ],
+    "teamAColor": "#9CA3AF",
+    "teamBColor": "#F87171",
+    "teamAName": "Time A",
+    "teamBName": "Time B"
+  }
+}

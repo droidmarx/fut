@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "Player": {
+      "title": "Player",
+      "description": "Represents a player on the field or on the bench.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the player from the database."
+        },
+        "playerNumber": {
+          "type": "number",
+          "description": "The player's shirt number."
+        },
+        "team": {
+          "type": "string",
+          "description": "The team the player belongs to ('A' or 'B').",
+          "enum": ["A", "B"]
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the player slot.",
+          "enum": ["disponivel", "pendente", "aprovado"]
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the person who reserved the slot."
+        },
+        "reservedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The ISO timestamp when the slot was reserved."
+        }
+      },
+      "required": ["id", "playerNumber", "team", "status"]
+    },
+    "Administrator": {
+      "title": "Administrator",
+      "description": "Represents an administrator of the application.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID for the administrator."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the administrator."
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "description": "WhatsApp number for the administrator."
+        }
+      },
+      "required": ["id", "name", "whatsappNumber"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Application-wide settings.",
+      "type": "object",
+      "properties": {
+        "administrators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/entities/Administrator"
+          }
+        },
+        "teamAColor": {
+          "type": "string",
+          "description": "Hex color code for Team A."
+        },
+        "teamBColor": {
+          "type": "string",
+          "description": "Hex color code for Team B."
+        },
+        "teamAName": {
+          "type": "string",
+          "description": "Custom name for Team A."
+        },
+        "teamBName": {
+          "type": "string",
+          "description": "Custom name for Team B."
+        },
+        "gameDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date of the game."
+        }
+      },
+      "required": ["administrators"]
+    }
+  },
+  "auth": {
+    "providers": []
+  },
+  "firestore": {
+    "/players/{playerId}": {
+      "schema": {
+        "$ref": "#/entities/Player"
+      },
+      "description": "Stores individual player data."
+    },
+    "/settings/{settingsId}": {
+      "schema": {
+        "$ref": "#/entities/Settings"
+      },
+      "description": "Stores application settings. A single document with a fixed ID like 'app_settings' should be used."
+    }
+  }
+}
