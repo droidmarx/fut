@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, Clock, CheckCircle, XCircle, Armchair } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   confirmReservation,
@@ -48,6 +48,12 @@ import { useToast, playNotificationSound, playWhistleSound } from '@/hooks/use-t
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 type ReservationsTableProps = {
   initialPlayers: Player[];
@@ -273,6 +279,18 @@ export function ReservationsTable({ initialPlayers, settings }: ReservationsTabl
           <div className="space-y-0.5 overflow-hidden">
             <CardTitle className="flex items-center gap-2 truncate text-base font-bold">
               <span>{player.name || `Camisa #${player.playerNumber}`}</span>
+                {player.playerNumber > 12 && (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Armchair className="h-4 w-4 text-muted-foreground" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Banco de Reservas</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
             </CardTitle>
             <CardDescription className="text-xs">
               {player.name ? `Camisa #${player.playerNumber}` : statusDisplay[player.status].text}
@@ -347,7 +365,23 @@ export function ReservationsTable({ initialPlayers, settings }: ReservationsTabl
               </TableCell>
             )}
             <TableCell className="font-medium">Time {player.team}</TableCell>
-            <TableCell className="font-medium">#{player.playerNumber}</TableCell>
+            <TableCell className="font-medium">
+              <div className="flex items-center gap-2">
+                <span>#{player.playerNumber}</span>
+                {player.playerNumber > 12 && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Armchair className="h-4 w-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Banco de Reservas</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </TableCell>
             <TableCell>
               <Badge variant="secondary" className={statusDisplay[player.status].className}>
                 {statusDisplay[player.status].text}
