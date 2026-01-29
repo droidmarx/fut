@@ -54,6 +54,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Separator } from '@/components/ui/separator';
 
 type ReservationsTableProps = {
   initialPlayers: Player[];
@@ -399,7 +400,7 @@ export function ReservationsTable({ initialPlayers, settings }: ReservationsTabl
   
   const renderPlayerContent = (playersToRender: Player[], isPending: boolean) => {
     if (playersToRender.length === 0) {
-      return <p className="text-muted-foreground text-center py-4">Nenhum jogador nesta categoria.</p>;
+      return <p className="text-muted-foreground text-center py-4 px-2">Nenhum jogador para esta equipe nesta categoria.</p>;
     }
     return (
       <>
@@ -410,6 +411,35 @@ export function ReservationsTable({ initialPlayers, settings }: ReservationsTabl
             {renderPlayerTable(playersToRender, isPending)}
         </div>
       </>
+    );
+  };
+  
+  const renderTeamSections = (players: Player[], isPending: boolean) => {
+    const teamAPlayers = players.filter(p => p.team === 'A');
+    const teamBPlayers = players.filter(p => p.team === 'B');
+
+    return (
+        <div className="space-y-4">
+            {teamAPlayers.length > 0 && (
+                <div>
+                    <h4 className="font-bold text-base mb-2 px-2 pt-2 text-foreground/90 flex items-center gap-2">
+                        <span style={{ backgroundColor: settings.teamAColor }} className="inline-block w-4 h-4 rounded-full border border-muted-foreground/20"></span>
+                        {settings.teamAName || 'Time A'}
+                    </h4>
+                    {renderPlayerContent(teamAPlayers, isPending)}
+                </div>
+            )}
+            {teamAPlayers.length > 0 && teamBPlayers.length > 0 && <Separator className="my-0" />}
+            {teamBPlayers.length > 0 && (
+                <div>
+                     <h4 className="font-bold text-base mb-2 px-2 pt-2 text-foreground/90 flex items-center gap-2">
+                         <span style={{ backgroundColor: settings.teamBColor }} className="inline-block w-4 h-4 rounded-full border border-muted-foreground/20"></span>
+                        {settings.teamBName || 'Time B'}
+                    </h4>
+                    {renderPlayerContent(teamBPlayers, isPending)}
+                </div>
+            )}
+        </div>
     );
   };
 
@@ -446,19 +476,19 @@ export function ReservationsTable({ initialPlayers, settings }: ReservationsTabl
               <AccordionItem value="pendentes">
                 <AccordionTrigger>Pendentes ({pendingPlayers.length})</AccordionTrigger>
                 <AccordionContent>
-                  {renderPlayerContent(pendingPlayers, true)}
+                  {pendingPlayers.length > 0 ? renderTeamSections(pendingPlayers, true) : <p className="text-muted-foreground text-center py-4">Nenhum jogador nesta categoria.</p>}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="aprovados">
                 <AccordionTrigger>Aprovados ({approvedPlayers.length})</AccordionTrigger>
                 <AccordionContent>
-                  {renderPlayerContent(approvedPlayers, false)}
+                  {approvedPlayers.length > 0 ? renderTeamSections(approvedPlayers, false) : <p className="text-muted-foreground text-center py-4">Nenhum jogador nesta categoria.</p>}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="disponiveis">
                 <AccordionTrigger>Disponíveis ({availablePlayers.length})</AccordionTrigger>
                 <AccordionContent>
-                  {renderPlayerContent(availablePlayers, false)}
+                  {availablePlayers.length > 0 ? renderTeamSections(availablePlayers, false) : <p className="text-muted-foreground text-center py-4">Nenhum jogador nesta categoria.</p>}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
